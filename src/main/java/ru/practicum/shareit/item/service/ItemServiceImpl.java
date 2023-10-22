@@ -12,9 +12,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
-
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
+
 
     @Override
     public Item addItem(long userId, Item item) {
@@ -24,20 +24,25 @@ public class ItemServiceImpl implements ItemService {
         return itemRepository.add(item);
     }
 
-    @Override
     public Item updateItem(Item item, long itemId, long userId) {
-
         userRepository.get(userId);
-        itemRepository.get(itemId);
-
-        item.setId(itemId);
-        item.setOwner(userId);
-
-        if (!getItemsUser(userId).contains(item)) {
+        Item storedItem = itemRepository.get(itemId);
+        if (storedItem.getOwner() != userId) {
             throw new NotFoundException(Item.class, "the item was not found with the user id " + userId);
         }
-
-        return itemRepository.update(userId, item);
+        item.setId(itemId);
+        item.setOwner(userId);
+        if (item.getName() != null) {
+            storedItem.setName(item.getName());
+        }
+        if (item.getDescription() != null) {
+            storedItem.setDescription(item.getDescription());
+        }
+        if (item.getAvailable() != null) {
+            storedItem.setAvailable(item.getAvailable());
+        }
+        itemRepository.update(storedItem);
+        return storedItem;
     }
 
     @Override
@@ -58,4 +63,8 @@ public class ItemServiceImpl implements ItemService {
 
         return itemRepository.search(text);
     }
+
+
+
+
 }

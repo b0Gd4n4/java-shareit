@@ -2,6 +2,7 @@ package ru.practicum.shareit.request.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import ru.practicum.shareit.marker.Marker;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ import java.time.LocalDate;
 public class ItemRequestDto {
 
     @Positive
+    @NotNull(groups = Marker.OnUpdate.class)
     private long id;
 
     @NotNull(message = "Description cannot be empty or contain spaces.")

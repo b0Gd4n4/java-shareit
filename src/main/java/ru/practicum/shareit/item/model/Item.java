@@ -1,8 +1,9 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
+import java.util.Objects;
 
 /**
  * TODO Sprint add-controllers.
@@ -23,5 +24,7 @@ public class Item {
     private Boolean available;
 
     private long owner;
+
+
 
 }

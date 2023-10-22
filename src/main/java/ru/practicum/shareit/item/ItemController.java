@@ -31,7 +31,7 @@ public class ItemController {
     public ItemDto add(@RequestHeader("X-Sharer-User-Id") long userId,
                        @RequestBody @Valid ItemDto itemDto) {
 
-        Item item = mapper.returnItem(itemDto);
+        Item item = ItemMapper.returnItem(itemDto);
         itemService.addItem(userId, item);
         log.info("User {}, add new item {}", userId, item.getName());
         return mapper.returnItemDto(item);

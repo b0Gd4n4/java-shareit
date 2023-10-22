@@ -9,11 +9,11 @@ import java.util.*;
 @Component
 public class ItemRepositoryImpl implements ItemRepository {
 
-    private static long newId = 1;
+    private long nextId = 0;
 
-    private final HashMap<Long, List<Item>> items = new HashMap<>();
+    private final Map<Long, List<Item>> items = new LinkedHashMap<>();
 
-    private final HashMap<Long, Item> allItems = new HashMap<>();
+    private final Map<Long, Item> allItems = new HashMap<>();
 
     @Override
     public Item get(long itemId) {
@@ -34,9 +34,8 @@ public class ItemRepositoryImpl implements ItemRepository {
     @Override
     public Item add(Item item) {
 
-        if (item.getId() == 0) {
-            item.setId(newId++);
-        }
+        long id = getNextFreeId();
+        item.setId(id);
 
         allItems.put(item.getId(), item);
 
@@ -51,31 +50,10 @@ public class ItemRepositoryImpl implements ItemRepository {
         return item;
     }
 
-    @Override
-    public Item update(long userId, Item item) {
-
-        Item newItem = allItems.get(item.getId());
-
-        if (item.getName() != null) {
-            newItem.setName(item.getName());
-        }
-
-        if (item.getDescription() != null) {
-            newItem.setDescription(item.getDescription());
-        }
-
-        if (item.getAvailable() != null) {
-            newItem.setAvailable(item.getAvailable());
-        }
-
-        List<Item> list = items.get(userId);
-        list.remove(item);
-        list.add(newItem);
-
-        allItems.put(item.getId(), newItem);
-
-        return newItem;
-    }
+   @Override
+    public void update(Item item) {
+       allItems.put(item.getId(), item);
+   }
 
 
     @Override
@@ -108,4 +86,10 @@ public class ItemRepositoryImpl implements ItemRepository {
 
         return new ArrayList<>(set);
     }
+
+    public Long getNextFreeId() {
+        return ++nextId;
+    }
+
+
 }

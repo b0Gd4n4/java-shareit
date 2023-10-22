@@ -12,10 +12,11 @@ public interface ItemRepository {
 
     Item add(Item item);
 
-    Item update(long userId, Item item);
+    void update(Item item);
 
     List<Item> getItemListByUserId(long userId);
 
     List<Item> search(String text);
+
 
 }

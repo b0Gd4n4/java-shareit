@@ -5,16 +5,15 @@ import ru.practicum.shareit.exception.EmailExistException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.model.User;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository {
 
-    private static long newId = 1;
+    private long nextId = 0;
 
-    private final HashMap<Long, User> userMap = new HashMap<>();
+    private final Map<Long, User> userMap = new HashMap<>();
+    private final Set<String> emails = new HashSet<>();
 
     @Override
     public User get(long userId) {
@@ -31,27 +30,28 @@ public class UserRepositoryImpl implements UserRepository {
         return new ArrayList<>(userMap.values());
     }
 
+
     @Override
     public User add(User user) {
-
-        for (User userCheckEmail : getAll()) {
-            if (userCheckEmail.getEmail().equals(user.getEmail())) {
-                throw new EmailExistException("there is already a user with an email " + user.getEmail());
-            }
+        final String email = user.getEmail();
+        if (emails.contains(email)) {
+		throw new EmailExistException("Email: " + email + " already exists");
         }
-
-        if (user.getId() == 0) {
-            user.setId(newId++);
-        }
-
+        long id = getNextFreeId();
+        user.setId(id);
         userMap.put(user.getId(), user);
+        emails.add(email);
         return user;
+
     }
+
+
 
     @Override
     public User update(User user, long userId) {
-
+        emails.clear();
         User newUser = userMap.get(userId);
+        final String email = user.getEmail();
 
         if (user.getName() != null) {
             newUser.setName(user.getName());
@@ -67,6 +67,7 @@ public class UserRepositoryImpl implements UserRepository {
         }
 
         userMap.put(userId, newUser);
+        emails.add(email);
         return userMap.get(user.getId());
     }
 
@@ -78,5 +79,9 @@ public class UserRepositoryImpl implements UserRepository {
         }
 
         userMap.remove(user.getId());
+    }
+
+    public Long getNextFreeId() {
+        return ++nextId;
     }
 }
