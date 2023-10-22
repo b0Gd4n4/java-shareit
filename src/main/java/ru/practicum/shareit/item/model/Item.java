@@ -1,9 +1,9 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.util.Objects;
 
 /**
  * TODO Sprint add-controllers.
