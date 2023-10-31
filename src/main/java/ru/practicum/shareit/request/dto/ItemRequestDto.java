@@ -17,7 +17,7 @@ public class ItemRequestDto {
 
     @Positive
     @NotNull(groups = Marker.OnUpdate.class)
-    private long id;
+    private Long id;
 
     @NotNull(message = "Description cannot be empty or contain spaces.")
     @NotBlank(message = "Name cannot be empty or contain spaces.")

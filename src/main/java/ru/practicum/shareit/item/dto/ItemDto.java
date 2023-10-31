@@ -2,10 +2,12 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import ru.practicum.shareit.booking.dto.BookingShortDto;
 import ru.practicum.shareit.marker.Marker;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * TODO Sprint add-controllers.
@@ -16,7 +18,7 @@ import javax.validation.constraints.NotNull;
 public class ItemDto {
 
     @NotNull(groups = Marker.OnUpdate.class)
-    private long id;
+    private Long id;
 
     @NotNull(message = "Name cannot be empty or contain spaces.")
     @NotBlank(message = "Name cannot be empty or contain spaces.")
@@ -28,5 +30,11 @@ public class ItemDto {
 
     @NotNull(message = "Available cannot be empty")
     private Boolean available;
+
+    private BookingShortDto lastBooking;
+
+    private BookingShortDto nextBooking;
+
+    private List<CommentDto> comments;
 
 }
