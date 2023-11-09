@@ -10,6 +10,7 @@ import ru.practicum.shareit.user.UserMapper;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @UtilityClass
 public class BookingMapper {
 

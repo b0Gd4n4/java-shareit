@@ -6,6 +6,7 @@ import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @UtilityClass
 public class UserMapper {
 
