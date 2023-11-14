@@ -42,7 +42,7 @@ public class ErrorHandler {
     }
 
 
-    /*@ExceptionHandler
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleOtherException(final Throwable e) {
         return new ErrorResponse(
@@ -54,6 +54,6 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleThrowable(final MethodArgumentNotValidException e) {
         return new ErrorResponse(e.getMessage());
-    }*/
+    }
 
 }
