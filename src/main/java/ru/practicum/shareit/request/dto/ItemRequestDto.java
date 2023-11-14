@@ -2,10 +2,13 @@ package ru.practicum.shareit.request.dto;
 
 import lombok.Builder;
 import lombok.Data;
+import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.marker.Marker;
 
-import javax.validation.constraints.*;
-import java.time.LocalDate;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * TODO Sprint add-item-requests.
@@ -15,21 +18,14 @@ import java.time.LocalDate;
 @Builder
 public class ItemRequestDto {
 
-    @Positive
     @NotNull(groups = Marker.OnUpdate.class)
-    private Long id;
-
-    @NotNull(message = "Description cannot be empty or contain spaces.")
-    @NotBlank(message = "Name cannot be empty or contain spaces.")
-    @Size(max = 200, message = "The maximum length of the description should not exceed 200 characters")
-    private String description;
-
-    @Positive
-    @NotNull(message = "Description cannot be empty or contain spaces.")
-    private long requestor;
+    private long id;
 
     @NotNull
-    @PastOrPresent
-    private LocalDate created;
+    @NotBlank
+    private String description;
 
+    private LocalDateTime created;
+
+    private List<ItemDto> items;
 }

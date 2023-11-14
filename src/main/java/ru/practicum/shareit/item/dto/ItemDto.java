@@ -7,6 +7,7 @@ import ru.practicum.shareit.marker.Marker;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 /**
@@ -36,5 +37,9 @@ public class ItemDto {
     private BookingShortDto nextBooking;
 
     private List<CommentDto> comments;
+
+    @Positive
+    @NotNull(groups = Marker.OnUpdate.class)
+    private Long requestId;
 
 }
