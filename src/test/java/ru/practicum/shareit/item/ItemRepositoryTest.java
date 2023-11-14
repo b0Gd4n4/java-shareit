@@ -40,15 +40,15 @@ class ItemRepositoryTest {
                 .build());
 
         firstItem = itemRepository.save(Item.builder()
-                .name("wewdfrgrsg")
-                .description("new name, new work")
+                .name("fdhehjgdeh")
+                .description("new name")
                 .available(true)
                 .owner(user)
                 .build());
 
         secondItem = itemRepository.save(Item.builder()
                 .name("NameOne")
-                .description("a very good name")
+                .description("new nameOne very")
                 .available(true)
                 .owner(user)
                 .build());

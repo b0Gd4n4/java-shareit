@@ -21,8 +21,8 @@ public class ItemRequestDto {
     @NotNull(groups = Marker.OnUpdate.class)
     private long id;
 
-    @NotNull
-    @NotBlank
+    @NotNull(message = "Description cannot be empty")
+    @NotBlank(message = "Description cannot be blank")
     private String description;
 
     private LocalDateTime created;

@@ -20,13 +20,13 @@ class UserDtoTest {
         UserDto userDto = UserDto.builder()
                 .id(1L)
                 .name("Name")
-                .email("name@yandex.ru")
+                .email("nameOne@yandex.ru")
                 .build();
 
         JsonContent<UserDto> result = json.write(userDto);
 
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
         assertThat(result).extractingJsonPathStringValue("$.name").isEqualTo("Name");
-        assertThat(result).extractingJsonPathStringValue("$.email").isEqualTo("name@yandex.ru");
+        assertThat(result).extractingJsonPathStringValue("$.email").isEqualTo("nameOne@yandex.ru");
     }
 }

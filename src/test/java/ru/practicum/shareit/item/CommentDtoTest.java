@@ -29,7 +29,7 @@ class CommentDtoTest {
 
         CommentDto commentDto = CommentDto.builder()
                 .id(1L)
-                .text("fjvdrhdlvhe")
+                .text("fdhehjgdeh")
                 .created(LocalDateTime.now())
                 .authorName(userDto.getName())
                 .build();
@@ -37,7 +37,7 @@ class CommentDtoTest {
         JsonContent<CommentDto> result = json.write(commentDto);
 
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
-        assertThat(result).extractingJsonPathStringValue("$.text").isEqualTo("fjvdrhdlvhe");
+        assertThat(result).extractingJsonPathStringValue("$.text").isEqualTo("fdhehjgdeh");
         assertThat(result).extractingJsonPathStringValue("$.authorName").isEqualTo("Name");
     }
 }

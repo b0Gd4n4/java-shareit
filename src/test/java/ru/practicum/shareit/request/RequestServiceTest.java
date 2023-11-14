@@ -61,31 +61,31 @@ public class RequestServiceTest {
         secondUser = User.builder()
                 .id(2L)
                 .name("NameOne")
-                .email("nameone@yandex.ru")
+                .email("nameOne@yandex.ru")
                 .build();
 
         firstItemRequest = ItemRequest.builder()
                 .id(1L)
-                .description("OneItemRequest")
+                .description("ItemRequest One")
                 .created(LocalDateTime.now())
                 .build();
 
         secondItemRequest = ItemRequest.builder()
                 .id(2L)
-                .description("TwoItemRequest")
+                .description("ItemRequest Two")
                 .created(LocalDateTime.now())
                 .build();
 
         item = Item.builder()
                 .id(1L)
-                .name("fjvdrhdlvhe")
-                .description("new name, new work")
+                .name("fdhehjgdeh")
+                .description("new name")
                 .available(true)
                 .owner(firstUser)
                 .request(firstItemRequest)
                 .build();
 
-        itemRequestDto = ItemRequestDto.builder().description("OneItemRequest").build();
+        itemRequestDto = ItemRequestDto.builder().description("ItemRequest One").build();
     }
 
     @Test

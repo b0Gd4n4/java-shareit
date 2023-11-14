@@ -28,15 +28,15 @@ class RequestDtoTest {
 
         ItemDto itemDto = ItemDto.builder()
                 .requestId(1L)
-                .name("NameOne")
-                .description("new nameOne")
+                .name("Name")
+                .description("fdhehjgdeh")
                 .available(true)
                 .comments(Collections.emptyList())
                 .build();
 
         ItemRequestDto itemRequestDto = ItemRequestDto.builder()
                 .id(1L)
-                .description("OneItemRequest")
+                .description("ItemRequest One")
                 .created(created)
                 .items(List.of(itemDto))
                 .build();
@@ -44,7 +44,7 @@ class RequestDtoTest {
         JsonContent<ItemRequestDto> result = json.write(itemRequestDto);
 
         assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
-        assertThat(result).extractingJsonPathStringValue("$.description").isEqualTo("OneItemRequest");
+        assertThat(result).extractingJsonPathStringValue("$.description").isEqualTo("ItemRequest One");
         assertThat(result).extractingJsonPathStringValue("$.created").isEqualTo(created.format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")));
     }
 }

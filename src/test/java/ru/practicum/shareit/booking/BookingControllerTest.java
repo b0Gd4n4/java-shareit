@@ -19,9 +19,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -59,8 +59,8 @@ public class BookingControllerTest {
 
         itemDto = ItemDto.builder()
                 .requestId(1L)
-                .name("fjvdrhdlvhe")
-                .description("new name, new work")
+                .name("fdhehjgdeh")
+                .description("new name")
                 .available(true)
                 .build();
 
@@ -87,6 +87,25 @@ public class BookingControllerTest {
                 .booker(user)
                 .status(BookingStatus.APPROVED)
                 .build();
+    }
+
+    @Test
+    void createBooking() throws Exception {
+        when(bookingService.createBooking(any(BookingDto.class), anyLong())).thenReturn(firstBookingOutDto);
+
+        mvc.perform(post("/bookings")
+                        .content(mapper.writeValueAsString(bookingDto))
+                        .characterEncoding(StandardCharsets.UTF_8)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .header("X-Sharer-User-Id", 1L))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(firstBookingOutDto.getId()), Long.class))
+                .andExpect(jsonPath("$.status", is(firstBookingOutDto.getStatus().toString()), BookingStatus.class))
+                .andExpect(jsonPath("$.booker.id", is(firstBookingOutDto.getBooker().getId()), Long.class))
+                .andExpect(jsonPath("$.item.id", is(firstBookingOutDto.getItem().getId()), Long.class));
+
+        verify(bookingService, times(1)).createBooking(bookingDto, 1L);
     }
 
     @Test

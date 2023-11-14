@@ -44,13 +44,13 @@ public class RequestControllerTest {
 
         firstItemRequestDto = ItemRequestDto.builder()
                 .id(1L)
-                .description("OneItemRequest")
+                .description("ItemRequest One")
                 .created(LocalDateTime.now())
                 .build();
 
         secondItemRequestDto = ItemRequestDto.builder()
                 .id(2L)
-                .description("TwoItemRequest")
+                .description("ItemRequest Two")
                 .created(LocalDateTime.now())
                 .build();
     }
@@ -92,8 +92,8 @@ public class RequestControllerTest {
         when(itemRequestService.getAllRequests(anyLong(), anyInt(), anyInt())).thenReturn(List.of(firstItemRequestDto, secondItemRequestDto));
 
         mvc.perform(get("/requests/all")
-                        .param("One", String.valueOf(0))
-                        .param("Two", String.valueOf(10))
+                        .param("from", String.valueOf(0))
+                        .param("size", String.valueOf(10))
                         .characterEncoding(StandardCharsets.UTF_8)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)

@@ -38,7 +38,7 @@ public class ItemDto {
 
     private List<CommentDto> comments;
 
-    @Positive
+    @Positive(message = "must be positive")
     @NotNull(groups = Marker.OnUpdate.class)
     private Long requestId;
 

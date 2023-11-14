@@ -74,13 +74,13 @@ public class BookingServiceTest {
         secondUser = User.builder()
                 .id(2L)
                 .name("NameOne")
-                .email("nameone@yandex.ru")
+                .email("nameOne@yandex.ru")
                 .build();
 
         item = Item.builder()
                 .id(1L)
-                .name("fjvdrhdlvhe")
-                .description("new name, new work")
+                .name("fdhehjgdeh")
+                .description("new name")
                 .available(true)
                 .owner(firstUser)
                 .build();
@@ -114,7 +114,7 @@ public class BookingServiceTest {
     }
 
     @Test
-    void createBooking() {
+    void  addBooking() {
         when(itemRepository.existsById(anyLong())).thenReturn(true);
         when(itemRepository.findById(anyLong())).thenReturn(Optional.of(item));
         when(userRepository.existsById(anyLong())).thenReturn(true);
@@ -131,7 +131,7 @@ public class BookingServiceTest {
     }
 
     @Test
-    void createBookingWrongOwner() {
+    void  addBookingWrongOwner() {
         when(itemRepository.existsById(anyLong())).thenReturn(true);
         when(itemRepository.findById(anyLong())).thenReturn(Optional.of(item));
         when(userRepository.existsById(anyLong())).thenReturn(true);
@@ -141,7 +141,7 @@ public class BookingServiceTest {
     }
 
     @Test
-    void  createBookingItemBooked() {
+    void  addBookingItemBooked() {
 
         item.setAvailable(false);
 
@@ -154,7 +154,7 @@ public class BookingServiceTest {
     }
 
     @Test
-    void  createBookingNotValidEnd() {
+    void  addBookingNotValidEnd() {
         when(itemRepository.existsById(anyLong())).thenReturn(true);
         when(itemRepository.findById(anyLong())).thenReturn(Optional.of(item));
         when(userRepository.existsById(anyLong())).thenReturn(true);
@@ -166,7 +166,7 @@ public class BookingServiceTest {
     }
 
     @Test
-    void createBookingNotValidStart() {
+    void  addBookingNotValidStart() {
         when(itemRepository.existsById(anyLong())).thenReturn(true);
         when(itemRepository.findById(anyLong())).thenReturn(Optional.of(item));
         when(userRepository.existsById(anyLong())).thenReturn(true);

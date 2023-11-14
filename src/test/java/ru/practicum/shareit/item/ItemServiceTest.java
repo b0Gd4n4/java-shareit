@@ -77,14 +77,14 @@ public class ItemServiceTest {
 
         itemRequest = ItemRequest.builder()
                 .id(1L)
-                .description("ItemRequest 1")
+                .description("ItemRequest One")
                 .created(LocalDateTime.now())
                 .build();
 
         item = Item.builder()
                 .id(1L)
-                .name("fjvdrhdlvhe")
-                .description("new name, new work")
+                .name("fdhehjgdeh")
+                .description("new name")
                 .available(true)
                 .owner(user)
                 .request(itemRequest)
@@ -96,7 +96,7 @@ public class ItemServiceTest {
                 .id(1L)
                 .author(user)
                 .created(LocalDateTime.now())
-                .text("item nrm")
+                .text("new name one")
                 .build();
 
         commentDto = CommentMapper.returnCommentDto(comment);
@@ -247,7 +247,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    void addCommentUserNotBookingItem() {
+    void createCommentUserNotBookingItem() {
         when(userRepository.existsById(anyLong())).thenReturn(true);
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
         when(itemRepository.existsById(anyLong())).thenReturn(true);

@@ -47,7 +47,7 @@ class UserServiceTest {
 
         secondUser = User.builder()
                 .id(2L)
-                .name("nameOne")
+                .name("NameOne")
                 .email("nameOne@yandex.ru")
                 .build();
 
@@ -74,8 +74,8 @@ class UserServiceTest {
         when(userRepository.findByEmail(anyString())).thenReturn(List.of(firstUser));
         when(userRepository.save(any(User.class))).thenReturn(firstUser);
 
-        firstUserDto.setName("nameOne");
-        firstUserDto.setEmail("nameOne@yandex.ru");
+        firstUserDto.setName("Name3");
+        firstUserDto.setEmail("name3@yandex.ru");
 
         UserDto userDtoUpdated = userService.updateUser(firstUserDto, 1L);
 
