@@ -2,69 +2,206 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.booking.BookingMapper;
+import ru.practicum.shareit.booking.BookingStatus;
+import ru.practicum.shareit.booking.model.Booking;
+import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.check.CheckService;
 import ru.practicum.shareit.exception.NotFoundException;
+import ru.practicum.shareit.exception.ValidationException;
+import ru.practicum.shareit.item.CommentMapper;
+import ru.practicum.shareit.item.ItemMapper;
+import ru.practicum.shareit.item.dto.CommentDto;
+import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
+
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
+    private final BookingRepository bookingRepository;
+    private final CommentRepository commentRepository;
+    private final CheckService checkService;
 
-
+    @Transactional
     @Override
-    public Item addItem(long userId, Item item) {
+    public ItemDto createItem(long userId, ItemDto itemDto) {
 
-        userRepository.get(userId);
-        item.setOwner(userId);
-        return itemRepository.add(item);
+        checkService.checkUser(userId);
+
+        User user = userRepository.findById(userId).get();
+
+        Item item = ItemMapper.returnItem(itemDto, user);
+
+        itemRepository.save(item);
+
+        return ItemMapper.returnItemDto(item);
     }
 
-    public Item updateItem(Item item, long itemId, long userId) {
-        userRepository.get(userId);
-        Item storedItem = itemRepository.get(itemId);
-        if (storedItem.getOwner() != userId) {
+    @Transactional
+    @Override
+    public ItemDto updateItem(ItemDto itemDto, long itemId, long userId) {
+
+        checkService.checkUser(userId);
+        User user = userRepository.findById(userId).get();
+
+        checkService.checkItem(itemId);
+        Item item = ItemMapper.returnItem(itemDto, user);
+
+        item.setId(itemId);
+
+        if (!itemRepository.findByOwnerId(userId).contains(item)) {
             throw new NotFoundException(Item.class, "the item was not found with the user id " + userId);
         }
-        item.setId(itemId);
-        item.setOwner(userId);
+
+        Item newItem = itemRepository.findById(item.getId()).get();
+
         if (item.getName() != null) {
-            storedItem.setName(item.getName());
+            newItem.setName(item.getName());
         }
+
         if (item.getDescription() != null) {
-            storedItem.setDescription(item.getDescription());
+            newItem.setDescription(item.getDescription());
         }
+
         if (item.getAvailable() != null) {
-            storedItem.setAvailable(item.getAvailable());
+            newItem.setAvailable(item.getAvailable());
         }
-        itemRepository.update(storedItem);
-        return storedItem;
+
+        itemRepository.save(newItem);
+
+        return ItemMapper.returnItemDto(newItem);
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public Item getItemById(long userId) {
-        return itemRepository.get(userId);
+    public ItemDto getItemById(long itemId, long userId) {
+
+        checkService.checkItem(itemId);
+        Item item = itemRepository.findById(itemId).get();
+
+        ItemDto itemDto = ItemMapper.returnItemDto(item);
+
+        checkService.checkUser(userId);
+
+        if (item.getOwner().getId() == userId) {
+
+            Optional<Booking> lastBooking = bookingRepository.findFirstByItemIdAndStatusAndStartBeforeOrderByStartDesc(itemId, BookingStatus.APPROVED, LocalDateTime.now());
+            Optional<Booking> nextBooking = bookingRepository.findFirstByItemIdAndStatusAndStartAfterOrderByStartAsc(itemId, BookingStatus.APPROVED, LocalDateTime.now());
+
+            if (lastBooking.isPresent()) {
+                itemDto.setLastBooking(BookingMapper.returnBookingShortDto(lastBooking.get()));
+            } else {
+                itemDto.setLastBooking(null);
+            }
+
+            if (nextBooking.isPresent()) {
+                itemDto.setNextBooking(BookingMapper.returnBookingShortDto(nextBooking.get()));
+            } else {
+                itemDto.setNextBooking(null);
+            }
+        }
+
+        List<Comment> commentList = commentRepository.findAllByItemId(itemId);
+
+        if (!commentList.isEmpty()) {
+            itemDto.setComments(CommentMapper.returnICommentDtoList(commentList));
+        } else {
+            itemDto.setComments(Collections.emptyList());
+        }
+
+        return itemDto;
     }
 
-
+    @Transactional(readOnly = true)
     @Override
-    public List<Item> getItemsUser(long userId) {
+    public List<ItemDto> getItemsUser(long userId) {
 
-        userRepository.get(userId);
-        return itemRepository.getItemListByUserId(userId);
+        checkService.checkUser(userId);
+
+        List<ItemDto> resultList = new ArrayList<>();
+
+        for (ItemDto itemDto : ItemMapper.returnItemDtoList(itemRepository.findByOwnerId(userId))) {
+
+            Optional<Booking> lastBooking = bookingRepository.findFirstByItemIdAndStatusAndStartBeforeOrderByStartDesc(itemDto.getId(), BookingStatus.APPROVED, LocalDateTime.now());
+            Optional<Booking> nextBooking = bookingRepository.findFirstByItemIdAndStatusAndStartAfterOrderByStartAsc(itemDto.getId(), BookingStatus.APPROVED, LocalDateTime.now());
+
+            if (lastBooking.isPresent()) {
+                itemDto.setLastBooking(BookingMapper.returnBookingShortDto(lastBooking.get()));
+            } else {
+                itemDto.setLastBooking(null);
+            }
+
+            if (nextBooking.isPresent()) {
+                itemDto.setNextBooking(BookingMapper.returnBookingShortDto(nextBooking.get()));
+            } else {
+                itemDto.setNextBooking(null);
+            }
+
+            resultList.add(itemDto);
+        }
+
+        for (ItemDto itemDto : resultList) {
+
+            List<Comment> commentList = commentRepository.findAllByItemId(itemDto.getId());
+
+            if (!commentList.isEmpty()) {
+                itemDto.setComments(CommentMapper.returnICommentDtoList(commentList));
+            } else {
+                itemDto.setComments(Collections.emptyList());
+            }
+        }
+
+        return resultList;
     }
 
+    @Transactional(readOnly = true)
     @Override
-    public List<Item> searchItem(String text) {
+    public  List<ItemDto> searchItem(String text) {
 
-        return itemRepository.search(text);
+        if (text.equals("")) {
+            return Collections.emptyList();
+        } else {
+            return ItemMapper.returnItemDtoList(itemRepository.search(text));
+        }
     }
 
+    @Transactional
+    @Override
+    public CommentDto addComment(long userId, long itemId, CommentDto commentDto) {
 
+        checkService.checkUser(userId);
+        User user = userRepository.findById(userId).get();
 
+        checkService.checkItem(itemId);
+        Item item = itemRepository.findById(itemId).get();
 
+        LocalDateTime dateTime = LocalDateTime.now();
+
+        Optional<Booking> booking = bookingRepository.findFirstByItemIdAndBookerIdAndStatusAndEndBefore(itemId, userId, BookingStatus.APPROVED, dateTime);
+
+        if (booking.isEmpty()) {
+            throw new ValidationException("User " + userId + " not booking this item " + itemId);
+        }
+
+        Comment comment = CommentMapper.returnComment(commentDto, item, user, dateTime);
+        commentRepository.save(comment);
+
+        return CommentMapper.returnCommentDto(comment);
+    }
 }

@@ -17,14 +17,14 @@ import javax.validation.constraints.NotNull;
 public class UserDto {
 
     @NotNull(groups = Marker.OnUpdate.class)
-    private long id;
+    private Long id;
 
     @NotNull(message = "Login cannot be empty or contain spaces.")
     @NotBlank(message = "Login cannot be empty or contain spaces.")
     private String name;
 
     @NotNull(message = "Email cannot be empty")
-    @NotBlank(message = "Email cannot be empty")
+    @NotBlank()
     @Email(message = "Email must contain the character @")
     private String email;
 }
