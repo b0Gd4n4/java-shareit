@@ -25,7 +25,7 @@ public class ItemRequestDto {
     @NotBlank(message = "Description cannot be blank")
     private String description;
 
-    private LocalDateTime created;
+    private LocalDateTime created = LocalDateTime.now();
 
     private List<ItemDto> items;
 }

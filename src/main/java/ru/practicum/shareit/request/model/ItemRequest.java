@@ -33,5 +33,5 @@ public class ItemRequest {
     private User requester;
 
     @Column(name = "created", nullable = false)
-    private LocalDateTime created;
+    private LocalDateTime created = LocalDateTime.now();
 }
