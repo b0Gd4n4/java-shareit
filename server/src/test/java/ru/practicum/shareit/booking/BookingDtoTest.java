@@ -24,8 +24,8 @@ class BookingDtoTest {
     @Test
     void testBookingDto() throws Exception {
 
-        LocalDateTime start = LocalDateTime.of(2023, 11, 15, 16, 0);
-        LocalDateTime end = LocalDateTime.of(2023, 11, 15, 20, 0);
+        LocalDateTime start = LocalDateTime.of(2023, 11, 19, 16, 0);
+        LocalDateTime end = LocalDateTime.of(2023, 11, 19, 20, 0);
 
         UserDto user = UserDto.builder()
                 .id(1L)

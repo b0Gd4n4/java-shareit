@@ -53,27 +53,27 @@ public class BookingControllerTest {
 
         user = UserDto.builder()
                 .id(1L)
-                .name("Name")
-                .email("name@yandex.ru")
+                .name("Anna")
+                .email("anna@yandex.ru")
                 .build();
 
         itemDto = ItemDto.builder()
                 .requestId(1L)
-                .name("fdhehjgdeh")
-                .description("new name")
+                .name("screwdriver")
+                .description("works well, does not ask to eat")
                 .available(true)
                 .build();
 
         bookingDto = BookingDto.builder()
                 .itemId(1L)
-                .start(LocalDateTime.of(2023, 11, 15, 16, 0))
-                .end(LocalDateTime.of(2023, 11, 15, 20, 0))
+                .start(LocalDateTime.of(2023, 11, 19, 0, 0))
+                .end(LocalDateTime.of(2023, 11, 19, 12, 0))
                 .build();
 
         firstBookingOutDto = BookingOutDto.builder()
                 .id(1L)
-                .start(LocalDateTime.of(2023, 11, 15, 16, 0))
-                .end(LocalDateTime.of(2023, 11, 15, 20, 0))
+                .start(LocalDateTime.of(2023, 11, 19, 0, 0))
+                .end(LocalDateTime.of(2023, 11, 19, 12, 0))
                 .item(itemDto)
                 .booker(user)
                 .status(BookingStatus.APPROVED)
@@ -81,8 +81,8 @@ public class BookingControllerTest {
 
         secondBookingOutDto = BookingOutDto.builder()
                 .id(2L)
-                .start(LocalDateTime.of(2023, 11, 15, 16, 0))
-                .end(LocalDateTime.of(2023, 11, 15, 20, 0))
+                .start(LocalDateTime.of(2023, 11, 19, 14, 0))
+                .end(LocalDateTime.of(2023, 11, 19, 16, 0))
                 .item(itemDto)
                 .booker(user)
                 .status(BookingStatus.APPROVED)
@@ -110,7 +110,7 @@ public class BookingControllerTest {
 
     @Test
     void approveBooking() throws Exception {
-        when(bookingService.approveBooking(anyLong(),anyLong(), anyBoolean())).thenReturn(firstBookingOutDto);
+        when(bookingService.approveBooking(anyLong(), anyLong(), anyBoolean())).thenReturn(firstBookingOutDto);
 
         mvc.perform(patch("/bookings/{bookingId}", 1L)
                         .param("approved", "true")
@@ -129,7 +129,7 @@ public class BookingControllerTest {
 
     @Test
     void getBookingById() throws Exception {
-        when(bookingService.getBookingById(anyLong(),anyLong())).thenReturn(firstBookingOutDto);
+        when(bookingService.getBookingById(anyLong(), anyLong())).thenReturn(firstBookingOutDto);
 
         mvc.perform(get("/bookings/{bookingId}", 1L)
                         .characterEncoding(StandardCharsets.UTF_8)
