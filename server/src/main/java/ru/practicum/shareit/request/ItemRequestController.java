@@ -8,9 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.service.ItemRequestService;
 
-import javax.validation.Valid;
 import java.util.List;
-
 
 
 /**
@@ -28,7 +26,7 @@ public class ItemRequestController {
 
     @PostMapping
     public ResponseEntity<ItemRequestDto> createRequest(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                                     @RequestBody ItemRequestDto itemRequestDto) {
+                                                        @RequestBody ItemRequestDto itemRequestDto) {
 
         log.info("User {}, add new request", userId);
         return ResponseEntity.ok(itemRequestService.createRequest(itemRequestDto, userId));
@@ -44,7 +42,7 @@ public class ItemRequestController {
     @GetMapping("/all")
     public ResponseEntity<List<ItemRequestDto>> getAllRequests(@RequestHeader("X-Sharer-User-Id") Long userId,
                                                                @RequestParam(defaultValue = "0", required = false) Integer from,
-                                                               @RequestParam(defaultValue = "10",required = false) Integer size) {
+                                                               @RequestParam(defaultValue = "10", required = false) Integer size) {
 
         log.info("Get all requests by All users ");
         return ResponseEntity.ok(itemRequestService.getAllRequests(userId, from, size));
