@@ -3,10 +3,11 @@ package ru.practicum.shareit.item;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+
 import ru.practicum.shareit.booking.BookingStatus;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -31,8 +32,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class ItemServiceTest {
@@ -71,20 +72,20 @@ public class ItemServiceTest {
     void beforeEach() {
         user = User.builder()
                 .id(1L)
-                .name("Name")
-                .email("name@yandex.ru")
+                .name("Anna")
+                .email("anna@yandex.ru")
                 .build();
 
         itemRequest = ItemRequest.builder()
                 .id(1L)
-                .description("ItemRequest One")
+                .description("ItemRequest 1")
                 .created(LocalDateTime.now())
                 .build();
 
         item = Item.builder()
                 .id(1L)
-                .name("fdhehjgdeh")
-                .description("new name")
+                .name("screwdriver")
+                .description("works well, does not ask to eat")
                 .available(true)
                 .owner(user)
                 .request(itemRequest)
@@ -96,7 +97,7 @@ public class ItemServiceTest {
                 .id(1L)
                 .author(user)
                 .created(LocalDateTime.now())
-                .text("new name one")
+                .text("Thx, Cool item")
                 .build();
 
         commentDto = CommentMapper.returnCommentDto(comment);
@@ -121,7 +122,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    void createItem() {
+    void addItem() {
         when(userRepository.existsById(anyLong())).thenReturn(true);
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
         when(itemRequestRepository.findById(anyLong())).thenReturn(Optional.ofNullable(itemRequest));
@@ -186,8 +187,7 @@ public class ItemServiceTest {
     @Test
     void getItemsUser() {
         when(userRepository.existsById(anyLong())).thenReturn(true);
-        when(checkService.checkPageSize(anyInt(), anyInt())).thenReturn(PageRequest.of(5 / 10,10));
-        when(itemRepository.findByOwnerId(anyLong(), any(PageRequest.class))).thenReturn(new PageImpl<>(List.of(item)));
+        when(itemRepository.findByOwnerIdOrderById(anyLong(), any(PageRequest.class))).thenReturn(new PageImpl<>(List.of(item)));
         when(bookingRepository.findFirstByItemIdAndStatusAndStartBeforeOrderByStartDesc(item.getId(), BookingStatus.APPROVED, LocalDateTime.now())).thenReturn(Optional.of(firstBooking));
         when(bookingRepository.findFirstByItemIdAndStatusAndStartAfterOrderByStartAsc(item.getId(), BookingStatus.APPROVED, LocalDateTime.now())).thenReturn(Optional.of(secondBooking));
         when(commentRepository.findAllByItemId(anyLong())).thenReturn(List.of(comment));
@@ -199,12 +199,11 @@ public class ItemServiceTest {
         assertEquals(itemDtoTest.getAvailable(), item.getAvailable());
         assertEquals(itemDtoTest.getRequestId(), item.getRequest().getId());
 
-        verify(itemRepository, times(1)).findByOwnerId(anyLong(), any(PageRequest.class));
+        verify(itemRepository, times(1)).findByOwnerIdOrderById(anyLong(), any(PageRequest.class));
     }
 
     @Test
     void searchItem() {
-        when(checkService.checkPageSize(anyInt(), anyInt())).thenReturn(PageRequest.of(5 / 10,10));
         when(itemRepository.search(anyString(), any(PageRequest.class))).thenReturn(new ArrayList<>(List.of(item)));
 
         ItemDto itemDtoTest = itemService.searchItem("text", 5, 10).get(0);
@@ -219,8 +218,6 @@ public class ItemServiceTest {
 
     @Test
     void searchItemEmptyText() {
-        when(checkService.checkPageSize(anyInt(), anyInt())).thenReturn(PageRequest.of(5 / 10,10));
-
         List<ItemDto> itemDtoTest = itemService.searchItem("", 5, 10);
 
         assertTrue(itemDtoTest.isEmpty());
@@ -247,7 +244,7 @@ public class ItemServiceTest {
     }
 
     @Test
-    void createCommentUserNotBookingItem() {
+    void addCommentUserNotBookingItem() {
         when(userRepository.existsById(anyLong())).thenReturn(true);
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
         when(itemRepository.existsById(anyLong())).thenReturn(true);

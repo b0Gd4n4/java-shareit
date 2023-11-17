@@ -7,11 +7,12 @@ import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 
 import lombok.*;
+import marker.Marker;
 
 @Data
 @Builder
 public class BookingDto {
-
+    @NotNull(groups = Marker.OnUpdate.class)
     private Long itemId;
 
     @NotNull(message = "start cannot be empty.")

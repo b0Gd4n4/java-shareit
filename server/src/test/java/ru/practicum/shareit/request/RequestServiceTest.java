@@ -3,10 +3,11 @@ package ru.practicum.shareit.request;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+
 import ru.practicum.shareit.check.CheckService;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
@@ -17,12 +18,13 @@ import ru.practicum.shareit.request.service.ItemRequestService;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class RequestServiceTest {
@@ -54,42 +56,42 @@ public class RequestServiceTest {
     void beforeEach() {
         firstUser = User.builder()
                 .id(1L)
-                .name("Name")
-                .email("name@yandex.ru")
+                .name("Anna")
+                .email("anna@yandex.ru")
                 .build();
 
         secondUser = User.builder()
                 .id(2L)
-                .name("NameOne")
-                .email("nameOne@yandex.ru")
+                .name("Tiana")
+                .email("tiana@yandex.ru")
                 .build();
 
         firstItemRequest = ItemRequest.builder()
                 .id(1L)
-                .description("ItemRequest One")
+                .description("ItemRequest 1")
                 .created(LocalDateTime.now())
                 .build();
 
         secondItemRequest = ItemRequest.builder()
                 .id(2L)
-                .description("ItemRequest Two")
+                .description("ItemRequest 2")
                 .created(LocalDateTime.now())
                 .build();
 
         item = Item.builder()
                 .id(1L)
-                .name("fdhehjgdeh")
-                .description("new name")
+                .name("screwdriver")
+                .description("works well, does not ask to eat")
                 .available(true)
                 .owner(firstUser)
                 .request(firstItemRequest)
                 .build();
 
-        itemRequestDto = ItemRequestDto.builder().description("ItemRequest One").build();
+        itemRequestDto = ItemRequestDto.builder().description("ItemRequest 1").build();
     }
 
     @Test
-    void createRequest() {
+    void addRequest() {
         when(userRepository.existsById(anyLong())).thenReturn(true);
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(firstUser));
         when(itemRequestRepository.save(any(ItemRequest.class))).thenReturn(firstItemRequest);
@@ -120,7 +122,6 @@ public class RequestServiceTest {
 
     @Test
     void getAllRequests() {
-        when(checkService.checkPageSize(anyInt(), anyInt())).thenReturn(PageRequest.of(5 / 10,10));
         when(itemRequestRepository.findByIdIsNotOrderByCreatedAsc(anyLong(), any(PageRequest.class))).thenReturn(new PageImpl<>(List.of(firstItemRequest)));
         when(itemRepository.findByRequestId(anyLong())).thenReturn(List.of(item));
 
@@ -153,7 +154,7 @@ public class RequestServiceTest {
     }
 
     @Test
-    void createItemsToRequest() {
+    void addItemsToRequest() {
         when(itemRepository.findByRequestId(anyLong())).thenReturn(List.of(item));
 
         ItemRequestDto itemRequestDtoTest = itemRequestService.createItemsToRequest(firstItemRequest);

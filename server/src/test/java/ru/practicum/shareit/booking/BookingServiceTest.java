@@ -3,8 +3,8 @@ package ru.practicum.shareit.booking;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import ru.practicum.shareit.booking.dto.BookingDto;
@@ -15,7 +15,7 @@ import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.check.CheckService;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
-import ru.practicum.shareit.item.ItemMapper;
+import ru.practicum.shareit.item.*;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
@@ -23,13 +23,13 @@ import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class BookingServiceTest {
@@ -67,20 +67,20 @@ public class BookingServiceTest {
     void beforeEach() {
         firstUser = User.builder()
                 .id(1L)
-                .name("Name")
-                .email("name@yandex.ru")
+                .name("Anna")
+                .email("anna@yandex.ru")
                 .build();
 
         secondUser = User.builder()
                 .id(2L)
-                .name("NameOne")
-                .email("nameOne@yandex.ru")
+                .name("Tiana")
+                .email("tiana@yandex.ru")
                 .build();
 
         item = Item.builder()
                 .id(1L)
-                .name("fdhehjgdeh")
-                .description("new name")
+                .name("screwdriver")
+                .description("works well, does not ask to eat")
                 .available(true)
                 .owner(firstUser)
                 .build();
@@ -238,7 +238,6 @@ public class BookingServiceTest {
     @Test
     void getAllBookingsByBookerId() {
         when(userRepository.existsById(anyLong())).thenReturn(true);
-        when(checkService.checkPageSize(anyInt(), anyInt())).thenReturn(PageRequest.of(5 / 10,10));
         when(bookingRepository.findAllByBookerIdOrderByStartDesc(anyLong(), any(PageRequest.class))).thenReturn(new PageImpl<>(List.of(firstBooking)));
 
         String state = "ALL";
@@ -299,7 +298,6 @@ public class BookingServiceTest {
     void getAllBookingsForAllItemsByOwnerId() {
         when(userRepository.existsById(anyLong())).thenReturn(true);
         when(itemRepository.findByOwnerId(anyLong())).thenReturn(List.of(item));
-        when(checkService.checkPageSize(anyInt(), anyInt())).thenReturn(PageRequest.of(5 / 10,10));
         when(bookingRepository.findAllByItemOwnerIdOrderByStartDesc(anyLong(), any(PageRequest.class))).thenReturn(new PageImpl<>(List.of(firstBooking)));
 
         String state = "ALL";

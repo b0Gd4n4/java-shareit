@@ -23,11 +23,9 @@ import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
+
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -39,7 +37,6 @@ public class ItemServiceImpl implements ItemService {
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
     private final ItemRequestRepository itemRequestRepository;
-
     private final CheckService checkService;
 
     @Transactional
@@ -140,11 +137,11 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDto> getItemsUser(long userId, Integer from, Integer size) {
 
         checkService.checkUser(userId);
-        PageRequest pageRequest = checkService.checkPageSize(from, size);
+        PageRequest pageRequest = PageRequest.of(from / size, size);
 
         List<ItemDto> resultList = new ArrayList<>();
 
-        for (ItemDto itemDto : ItemMapper.returnItemDtoList(itemRepository.findByOwnerId(userId, pageRequest))) {
+        for (ItemDto itemDto : ItemMapper.returnItemDtoList(itemRepository.findByOwnerIdOrderById(userId, pageRequest))) {
 
             Optional<Booking> lastBooking = bookingRepository.findFirstByItemIdAndStatusAndStartBeforeOrderByStartDesc(itemDto.getId(), BookingStatus.APPROVED, LocalDateTime.now());
             Optional<Booking> nextBooking = bookingRepository.findFirstByItemIdAndStatusAndStartAfterOrderByStartAsc(itemDto.getId(), BookingStatus.APPROVED, LocalDateTime.now());
@@ -182,7 +179,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public  List<ItemDto> searchItem(String text, Integer from, Integer size) {
 
-        PageRequest pageRequest = checkService.checkPageSize(from, size);
+        PageRequest pageRequest = PageRequest.of(from / size, size);
 
         if (text.equals("")) {
             return Collections.emptyList();

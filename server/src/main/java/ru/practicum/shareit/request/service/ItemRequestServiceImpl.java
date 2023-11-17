@@ -61,7 +61,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public List<ItemRequestDto> getAllRequests(Long userId, Integer from, Integer size) {
 
-        PageRequest pageRequest = checkService.checkPageSize(from, size);
+        PageRequest pageRequest = PageRequest.of(from / size, size);
 
 
         Page<ItemRequest> itemRequests = itemRequestRepository.findByIdIsNotOrderByCreatedAsc(userId, pageRequest);

@@ -30,7 +30,7 @@ public class ItemController {
 
     @PostMapping
     public ResponseEntity<ItemDto> createItem(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                              @RequestBody @Valid ItemDto itemDto) {
+                                              @RequestBody ItemDto itemDto) {
 
         log.info("User {}, add new item {}", userId, itemDto.getName());
         return ResponseEntity.ok(itemService.createItem(userId, itemDto));
@@ -73,7 +73,7 @@ public class ItemController {
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<CommentDto> createComment(@RequestHeader("X-Sharer-User-Id") Long userId,
                                                     @PathVariable Long itemId,
-                                                    @RequestBody @Valid CommentDto commentDto) {
+                                                    @RequestBody CommentDto commentDto) {
 
         log.info("User {} add comment for Item {}", userId, itemId);
         return ResponseEntity.ok(itemService.createComment(userId, itemId, commentDto));

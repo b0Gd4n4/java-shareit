@@ -4,6 +4,7 @@ package item.dto;
 import booking.dto.BookingDto;
 import lombok.Builder;
 import lombok.Data;
+import marker.Marker;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -17,6 +18,7 @@ import java.util.List;
 @Builder
 public class ItemDto {
 
+    @NotNull(groups = Marker.OnUpdate.class)
     private Long id;
 
     @NotNull(message = "Name cannot be empty or contain spaces.")

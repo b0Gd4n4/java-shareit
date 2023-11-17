@@ -1,7 +1,5 @@
 package ru.practicum.shareit.check;
 
-import org.springframework.data.domain.PageRequest;
-
 public interface CheckService {
     void checkUser(Long userId);
 
@@ -11,5 +9,4 @@ public interface CheckService {
 
     void checkRequest(Long requestId);
 
-    PageRequest checkPageSize(Integer from, Integer size);
 }

@@ -1,4 +1,4 @@
-package ru.practicum.shareit.marker;
+package marker;
 
 public interface Marker {
     interface OnUpdate {}
