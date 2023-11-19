@@ -11,10 +11,10 @@ import org.springframework.data.domain.PageRequest;
 import ru.practicum.shareit.check.CheckService;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.dto.ItemRequestDto;
+import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.model.ItemRequest;
-import ru.practicum.shareit.repository.ItemRequestRepository;
-import ru.practicum.shareit.service.ItemRequestService;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
+import ru.practicum.shareit.request.service.ItemRequestService;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 

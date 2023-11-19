@@ -1,7 +1,7 @@
-package ru.practicum.shareit;
+package ru.practicum.shareit.request;
 
 import lombok.experimental.UtilityClass;
-import ru.practicum.shareit.dto.ItemRequestDto;
+import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
